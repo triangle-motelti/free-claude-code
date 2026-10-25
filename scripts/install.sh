@@ -1,6 +1,32 @@
 #!/bin/sh
 set -eu
 
+# --- redirect all installs, downloads, and caches to goinfre ---
+case "${HOME:-}" in
+    */goinfre) GOINFRE_DIR="$HOME" ;;
+    *) GOINFRE_DIR="${HOME}/goinfre" ;;
+esac
+
+mkdir -p "$GOINFRE_DIR/tmp" \
+         "$GOINFRE_DIR/.local/bin" \
+         "$GOINFRE_DIR/.cache/uv" \
+         "$GOINFRE_DIR/.cache/npm" \
+         "$GOINFRE_DIR/.npm-global"
+
+export HOME="$GOINFRE_DIR"
+export TMPDIR="$GOINFRE_DIR/tmp"
+export XDG_CACHE_HOME="$GOINFRE_DIR/.cache"
+export XDG_DATA_HOME="$GOINFRE_DIR/.local/share"
+export XDG_CONFIG_HOME="$GOINFRE_DIR/.config"
+export UV_CACHE_DIR="$GOINFRE_DIR/.cache/uv"
+export UV_TOOL_DIR="$GOINFRE_DIR/.local/share/uv/tools"
+export UV_TOOL_BIN_DIR="$GOINFRE_DIR/.local/bin"
+export UV_PYTHON_INSTALL_DIR="$GOINFRE_DIR/.local/share/uv/python"
+export NPM_CONFIG_CACHE="$GOINFRE_DIR/.cache/npm"
+export NPM_CONFIG_PREFIX="$GOINFRE_DIR/.npm-global"
+export PATH="$GOINFRE_DIR/.local/bin:$GOINFRE_DIR/.npm-global/bin:$GOINFRE_DIR/.opencode/bin:$PATH"
+# ---------------------------------------------------------------
+
 # Filled from the selected release before installation; placeholders are for dry-run.
 PYTHON_VERSION="<release-python>"
 MIN_UV_VERSION="<release-uv-minimum>"
